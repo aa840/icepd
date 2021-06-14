@@ -1,4 +1,4 @@
-icepd can be used to detect interactions using partial dependence and produce PD and ICE plots to visualize non-linearity.
+ICEPD can be used to detect interactions using partial dependence and produce PD and ICE plots to visualize non-linearity.
 
 We recommend you look at the tutorial in the Examples folder (Example_icepd.ipynb) for an overview of the important functionality.
 
