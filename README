@@ -33,7 +33,7 @@ Python version 3.7 is required.
 Unix
 
 For the development version:
-git clone ...
+git clone https://github.com/aa840/icepd.git
 cd icepd
 pip install .
 
