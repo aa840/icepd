@@ -1,0 +1,45 @@
+Explain_ml can be used to detect interactions using partial dependence and produce PD and ICE plots to visualize non-linearity.
+
+We recommend you look at the tutorial in the Examples folder (Example_icepd.ipynb) for an overview of the important functionality.
+
+Features:
+
+Partial dependence (PD):
+- PD plots for 1D and 2D
+- Ensemble options for 1D plots to show uncertainity
+- Gradient of PD for 1D plots
+- Linear model comparison for 1D plots
+- PD plots for 1D One Hot Encoded variables
+- Distributions of variable shown
+
+Individual Conditional Expectation Plots (ICE): 
+- ICE plots for 1D
+- Gradients available
+- Ensemble option
+
+Interactions:
+- H-statistics using PD
+- H-statistics using PD for null distribution
+- Statistical significance interaction detection
+- LASSO interaction detection
+- Bidirectional stepwise detection (not recommended)
+- GUIDE algorithm interaction detection (not recommended when collinearity present)
+
+
+Installation Guide
+
+Python version 3.7 is required.
+
+Unix
+
+For the development version:
+git clone ...
+cd icepd
+pip install .
+
+Citation
+
+To cite the program please use:
+...
+
+Author: Alice E A Allen, Email alice.allen@uni.lu
