@@ -114,5 +114,5 @@ def calc_artif_y(X,y, N_null=10):
         y_art = fa_x + (y_pi.values.ravel() - fa_pi)
         y_art_array.append(np.array(y_art.ravel()))
         
-    return y_art_array
+    return y_art_array.transpose()
     
