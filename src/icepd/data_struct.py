@@ -92,7 +92,7 @@ def calc_artif_y(X,y, N_null=10):
 
     # GBR used with max depth one to give an additive model with NL present
     #  The parameters of this may want to be tuned
-    gb = GradientBoostingRegressor(n_estimators=100, max_depth=1, loss='ls', random_state=1)
+    gb = GradientBoostingRegressor(n_estimators=100, max_depth=1, loss='squared_error', random_state=1)
     gb_gs = GridSearchCV(gb,
                          cv=5, n_jobs=1, verbose=1,
                        param_grid={"learning_rate": np.logspace(-2, 0, 5, base=10),
@@ -114,5 +114,5 @@ def calc_artif_y(X,y, N_null=10):
         y_art = fa_x + (y_pi.values.ravel() - fa_pi)
         y_art_array.append(np.array(y_art.ravel()))
         
-    return y_art_array.transpose()
+    return np.array(y_art_array)
     
