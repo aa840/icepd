@@ -33,6 +33,7 @@ def ice_plot(X, features, reg, ensemble='N', grid_size=None, grad='N', filename=
     ice_std = []
     ice_grad = []
     pdp_local = []
+    pd_zero_array = []
 
     for j in range(0,len(grid_x)):
         if ensemble == 'Y':
@@ -41,7 +42,7 @@ def ice_plot(X, features, reg, ensemble='N', grid_size=None, grad='N', filename=
             ice_tmp = []
             for r in reg.models_array:
                 pd_zero = pd_xs(features[0], X.iloc[:,features[0]].mean(), X.copy(), r) # PD at zero is calculated to shift all ICE values
-
+                pd_zero_array.append(pd_zero)
                 if N is not None:
                     ice_tmp.append(ice_xs(features, grid_x[j], X.copy().iloc[:N,:], r) - pd_zero)
                 else:
@@ -61,6 +62,7 @@ def ice_plot(X, features, reg, ensemble='N', grid_size=None, grad='N', filename=
             ice.append(ice_tmp - pd_zero) 
  
     ice = np.array(ice)
+    pd_zero_array = np.array(pd_zero_array)
 
     # Pandas array can sometimes be 3D, try change
     try:
