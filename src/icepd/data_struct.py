@@ -42,7 +42,7 @@ class Ensemble:
         return np.array(predict_array).mean(axis=0)
 
         
-    def fit(self, X,y, N = 25, epochs=50, batch_size=20, verbose=1, bootstrap = 'Y'):
+    def fit(self, X,y, N = 25, epochs=50, batch_size=20, verbose=1, bootstrap = 'Y', callbacks=None):
         # Fit an ensemble of models to the bootstrapped data
         # N is the number of models in the ensemble
 
@@ -69,8 +69,11 @@ class Ensemble:
                 train = X
             
             # Try to fit for NN, otherwise fit without settings
-            try: 
-                reg.fit(train, y.loc[train.index], epochs=epochs, batch_size=batch_size, verbose=verbose)
+            try:
+                if callbacks is None:
+                    reg.fit(train, y.loc[train.index], epochs=epochs, batch_size=batch_size, verbose=verbose)
+                else:
+                    reg.fit(train, y.loc[train.index], epochs=epochs, batch_size=batch_size, verbose=verbose, callback=callbacks)
             except:
                 reg.fit(train, y.loc[train.index].values.ravel())
    
