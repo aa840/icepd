@@ -12,7 +12,7 @@ from sklearn.utils import resample
 from icepd.partial_dep import calc_pdp_grad, pd_xs, plot_format
 
 
-def ice_plot(X, features, reg, ensemble='N', grid_size=None, grad='N', filename='./', N = None, alpha = None, center = None, unscale_x = None, show='Y'):
+def ice_plot(X, features, reg, ensemble='N', grid_size=None, grad='N', filename='./', N = None, alpha = None, center = None, unscale_x = None, show='Y', points_ice = 'N', color='b', label=None):
     # Plot the ice graph
     # Gradients plotted if grad = Y
     # alpha controls the transparency of the lines
@@ -37,6 +37,7 @@ def ice_plot(X, features, reg, ensemble='N', grid_size=None, grad='N', filename=
     for j in range(0,len(grid_x)):
         if ensemble == 'Y':
             # All ice points at point grid_x[j] are calculated for all models
+            ice_points = []
             ice_tmp = []
             for r in reg.models_array:
                 pd_zero = pd_xs(features[0], X.iloc[:,features[0]].mean(), X.copy(), r) # PD at zero is calculated to shift all ICE values
@@ -45,10 +46,13 @@ def ice_plot(X, features, reg, ensemble='N', grid_size=None, grad='N', filename=
                     ice_tmp.append(ice_xs(features, grid_x[j], X.copy().iloc[:N,:], r) - pd_zero)
                 else:
                     ice_tmp.append(ice_xs(features, grid_x[j], X.copy(), r) - pd_zero)
+                    ice_points.append(r.predict(X.iloc[:,:]) - pd_zero)
+                    
             ice_tmp = np.array(ice_tmp)
 
             # Mean model value is then plotted
             ice.append(ice_tmp.mean(axis=0)) 
+            ice_points = np.array(ice_points).mean(axis=0)
             # Std of models is also recorded
             ice_std.append(ice_tmp.std(axis=0))
         else:
@@ -80,6 +84,9 @@ def ice_plot(X, features, reg, ensemble='N', grid_size=None, grad='N', filename=
                 ice[n,:] = ice[n,:] - ice_zero[:]
                 
             ice[n,:] = ice[n,:] + pd_zero
+      
+        ice_points = ice_points.ravel() - ice_zero[:,0] + pd_zero_array.mean()
+
 
     no_inc = len(X)
 
@@ -92,9 +99,19 @@ def ice_plot(X, features, reg, ensemble='N', grid_size=None, grad='N', filename=
         
     # Plot ICE Graph
     if unscale_x is None:
-        plt.plot(grid_x,ice[:,:no_inc], 'b', linewidth=0.10, alpha=alpha) # Transparency will increase as more data points are added
+        if label is not None:
+            plt.plot(grid_x,ice[0,:no_inc], color, linewidth=0.10, alpha=alpha, label=label) # Transparency will increase as more data points are added
+            plt.plot(grid_x,ice[1:,:no_inc], color, linewidth=0.10, alpha=alpha) # Transparency will increase as more data points are added
+            plt.legend()
+        else:
+            plt.plot(grid_x,ice[:,:no_inc], color, linewidth=0.10, alpha=alpha) # Transparency will increase as more data points are added
     else:
-        plt.plot(((grid_x*unscale_x[1]) + unscale_x[0]),ice[:,:no_inc], 'b', linewidth=0.10, alpha=alpha) # Transparency will increase as more data points are added
+        if label is not None:
+            plt.plot(((grid_x*unscale_x[1]) + unscale_x[0]),ice[0,:no_inc], color, linewidth=0.10, alpha=alpha, label=label) # Transparency will increase as more data points are added
+            plt.plot(((grid_x*unscale_x[1]) + unscale_x[0]),ice[1:,:no_inc], color, linewidth=0.10, alpha=alpha) # Transparency will increase as more data points are added
+            plt.legend()
+        else:
+            plt.plot(((grid_x*unscale_x[1]) + unscale_x[0]),ice[:,:no_inc], color, linewidth=0.10, alpha=alpha) # Transparency will increase as more data points are added
         
     plt.xlabel(str(X.columns[features[0]]))
     plt.ylabel('ICE')
@@ -123,12 +140,14 @@ def ice_plot(X, features, reg, ensemble='N', grid_size=None, grad='N', filename=
         plt.tight_layout()
         plt.savefig(filename + 'ICE_plot_grads_' + str(features[0]) + '.pdf') 
 
-
         if show !='Y':
             plt.close()
     
-        
-    return ice
+
+    if points_ice == 'N':
+        return ice
+    else:
+        return ice, ice_points
 
 
 def ice_xs(i, xs, X, clf):
