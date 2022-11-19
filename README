@@ -39,6 +39,8 @@ git clone https://github.com/aa840/icepd.git
 cd icepd
 pip install .
 
+The installation process should take less than 2 minutes. 
+
 Citation
 
 To cite the program please use:
