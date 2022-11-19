@@ -32,6 +32,8 @@ Python version 3.7 is required.
 
 Unix
 
+This code has been tested with Ubuntu 20.04 and Python version 3.7.
+
 For the development version:
 git clone https://github.com/aa840/icepd.git
 cd icepd
